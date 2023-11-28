@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.MemberMapper">
+  <select id="useridCheck" parameterType="com.example.demo.vo.MemberVo" resultType="Integer">
+    select count(*) from member where userid=#{userid} 
+  </select>
+  
+  <insert id="memberOk" parameterType="com.example.demo.vo.MemberVo">
+    insert into member(userid,name,pwd,phone,email,writeday)
+    values(#{userid},#{name},#{pwd},#{phone},#{email},now())
+  </insert>
+  
+  <select id="loginOk" resultType="com.example.demo.vo.MemberVo" parameterType="com.example.demo.vo.MemberVo">
+   <![CDATA[ 
+    select name,state,no,userid from member 
+    where userid=#{userid} and pwd=#{pwd} and state<>2
+   ]]>
+  </select>
+  
+  <insert id="addjjim">
+    insert into jjim(pcode,userid,writeday)
+    values(#{pcode},#{userid},now())
+  </insert>
+  
+  <insert id="addCart">
+    insert into cart(pcode,su,userid,writeday)
+    values(#{pcode},#{su},#{userid},now())
+  </insert>
+  
+  <select id="member" resultType="com.example.demo.vo.MemberVo">
+    select * from member
+  </select>
+  <select id="getMember" resultType="com.example.demo.vo.MemberVo">
+    select * from member where userid=#{userid}
+  </select>
+  
+  <select id="getCode" resultType="int">
+    select ifnull( max(right(bookcode,3)) ,0)+1 
+    from book 
+    where bookcode like concat(#{code},'%');
+  </select>
+  
+  <insert id="bookAdd">
+    insert into book(title,price,name,bookcode,writeday)
+    values(#{title},#{price},#{name},#{bookcode},now());
+  </insert>
+  
+  <select id="getCal" resultType="HashMap">
+     select * from cal where xday like concat(#{day},'%') order by xday asc
+  </select> <!-- 1일부터 30일까지 전부다 -->
+   <select id="getCal2" resultType="HashMap">
+     select chk, right(xday,2) as xday from cal where xday like concat(#{day},'%') and chk=1
+  </select> <!-- chk=1인 레코드만 가져온다 -->
+  
+  <select id="isTest">
+     create table ttt(id int)
+  </select>
+  
+  <update id="chgState">
+     update member set state=0 where no=#{no}
+  </update>
+  
+<!--   <insert id="setCart">
+     insert into cart(userid,pcode,su,writeday)
+     values(#{userid},#{pcode},#{su},curdate())
+  </insert>
+ --></mapper>
+
+
+
+
+
+
+
+
